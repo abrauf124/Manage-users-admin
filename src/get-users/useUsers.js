@@ -8,7 +8,7 @@ export const useUsers = () => {
         setIsLoading(true);
         const response = await fetch('/users');
         const rawUsersResponse = await response.json();
-        console.log(rawUsersResponse);
+        // console.log(rawUsersResponse);
         setRawUsers(rawUsersResponse);
         setIsLoading(false);
     }

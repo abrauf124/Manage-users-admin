@@ -6,9 +6,9 @@ import { BackButton } from '../ui';
 
 export const UpdateUserPage = () => {
 const location = useLocation()
-const { user } = location.state
- console.log(user);
 const navigate = useNavigate();
+const { user } = location.state;
+ //console.log(user);
 const[ isFormValid, setIsFormValid]= useState(false);
 const [checked, setChecked]= useState(false);
 const [serverError, setServerError] = useState({});
@@ -38,17 +38,19 @@ function handleChange(event) {
   setInputValue({ ...inputValues, [name]: value });
 }
 
-
-
-
 useEffect(() => {
   let errors = {...validation};
   setValidation(errors);
   checkValidation(inputValues, errors,checked);
   
-  errors.name==="" && errors.phoneNum ==="" && errors.email==="" && errors.password==="" && errors.newPassword==="" && errors.confirmNewPassword==="" 
-  ? setIsFormValid(true)
-  : setIsFormValid(false);
+  if(!checked &&errors.name==="" && errors.phoneNum ==="" && errors.password===""){
+    setIsFormValid(true)
+  } else if (errors.name==="" && errors.phoneNum ==="" && errors.email==="" && errors.password==="" && errors.newPassword==="" && errors.confirmNewPassword==="" ){
+    setIsFormValid(true);
+  }else {
+    setIsFormValid(false);
+  }
+ 
 }, [inputValues]);
 
 
@@ -63,6 +65,7 @@ const newUser = {
     email: inputValues.email,
     password: inputValues.password,
     newPassword: inputValues.newPassword,
+    checked: checked,
 };
 const response = await fetch('/users', {
     method : 'put',
@@ -72,7 +75,7 @@ const response = await fetch('/users', {
     },
 });
 const error = await response.json();
-        console.log(error);
+       // console.log(error);
         if(error==='ok'){
             navigate('/');
         }else {
@@ -125,6 +128,15 @@ return(
             value={inputValues.phoneNum}
             />      
             {validation.phoneNum && <p className='validation'>{validation.phoneNum}</p>}    
+            <input
+             type='password'
+             name="password"
+             placeholder='Enter your Password to continue'
+             className='space-after space-before full-width'
+             onChange={(e) => handleChange(e)}
+             value={inputValues.password} />
+               {validation.password && <p className='validation'>{validation.password}</p>} 
+               {!isFormValid && <p className='validation'>{serverError.password}</p>}         
             <label>
               Do you want to change the password ?
         <input type="checkbox"
@@ -134,15 +146,6 @@ return(
             </label>
          {checked 
          ? <>
-         <input
-          type='password'
-          name="password"
-          placeholder='Enter your Password to continue'
-          className='space-after space-before full-width'
-          onChange={(e) => handleChange(e)}
-          value={inputValues.password} />
-            {validation.password && <p className='validation'>{validation.password}</p>} 
-            {!isFormValid && <p className='validation'>{serverError.password}</p>}         
             <input
           type='password'
           name="newPassword"

@@ -64,7 +64,6 @@ export const AddUserPage = () => {
             },
         });
         const error = await response.json();
-        console.log(error);
         if(error==='ok'){
             navigate('/');
         }else {
