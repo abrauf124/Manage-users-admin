@@ -14,7 +14,7 @@ export const UsersList =  ({ isLoading, users, onDelete}) => {
         ];
       const [data, setData] =useState([]);
       const handleDelete = (rowUser) =>{
-       if( window.confirm("Are you sure you want to delete the user permanently? : " + rowUser.userName)){
+       if( window.confirm("Are you sure you want to delete the user permanently? : " + rowUser.userName.toUpperCase())){
            onDelete(rowUser._id)
        }
 
